@@ -16,6 +16,9 @@ json
 
 ## Tested on:
 Emby - v4.7.10.0
+
 Kavita - v0.6.1
+
 KavitaEmail (using Gmail) - v0.1.10
+
 Python - v3.10
