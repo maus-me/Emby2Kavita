@@ -1,0 +1,3 @@
+kavitapy
+requests>=2.27.0
+embypy
