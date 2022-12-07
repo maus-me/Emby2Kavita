@@ -4,29 +4,27 @@ import json
 
 
 def main():
-    kavita_api_key = "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
-    kavita_domain_name = "https://" #NO TRAILING /
+    kavita_api_key = "xxxx"
+    kavita_domain_name = "https://" #Should be external domain, otherwise email send will be for internal IP
 
-    emby_domain_name = "https://" # NO TRAILING /
-    emby_api_key = "xxxxxxxxxxx"
+    emby_domain_name = "https://"
+    emby_api_key = "xxxx"
 
-    # Create the JWT from Kavita Info
+    # 1. Create the JWT from Kavita Info
     jwt = kavitapy.Reader(kavita_domain_name, kavita_api_key).token
 
-    # Gets the Emby Connect Users
+    # 2. Gets the Emby Connect Users
     connectusers = get_emby_users(emby_domain_name, emby_api_key)
     print('emby connect users:', connectusers)
 
-    # Finds the missing emails in Kavita
+    # 3. Finds the missing emails in Kavita
     missing_emails = dupe_checker(kavita_domain_name, connectusers, jwt)
     print('missing:', missing_emails)
 
-    pending_invite = kavita_pending_id(kavita_domain_name, jwt)
-    print('pending invite id:', pending_invite)
+#    pending_invite = kavita_pending_id(kavita_domain_name, jwt)
+#    print('pending invite id:', pending_invite)
 
-    kavita_resend_email(kavita_domain_name, jwt, pending_invite)
-
-    # Parse users to inviter
+    # 4. Send invite via Kavita
     for email in missing_emails:
         invite(kavita_domain_name, email, jwt)
 
@@ -58,7 +56,7 @@ def get_emby_users(emby_domain_name, emby_api_key):
 
 
 ###########################
-# KAVITA INVITES
+# KAVITA
 ###########################
 def dupe_checker(kavita_domain_name, connectusers, jwt):
     # Get list of all Kavita Email Addresses
@@ -85,39 +83,6 @@ def dupe_checker(kavita_domain_name, connectusers, jwt):
 
     missing = list(sorted(set2 - set1))
     return missing
-
-
-def kavita_pending_id(kavita_domain_name, jwt):
-    # Get list of all Kavita Email Addresses
-    headers = {
-        'accept': 'text/plain',
-        'Authorization': jwt,
-    }
-    response = requests.get(kavita_domain_name + '/api/Users/pending', headers=headers)
-
-    kavitaid = []
-
-    if response.status_code == 200:
-        data = json.loads(response.content.decode('utf-8'))
-        print(data)
-        for item in data:
-            if item.get('id') is not None:
-                kavitaid.append(item.get('id'))
-                print(item.get('id'))
-
-    return kavitaid
-
-
-def kavita_resend_email(kavita_domain_name, jwt, kavitaid):
-    headers = {
-        'accept': 'text/plain',
-        'Authorization': jwt,
-        'Content-Type': 'application/x-www-form-urlencoded',
-    }
-    params = {
-        'userId': id,
-    }
-
 
 def invite(domain_name, email, jwt):
     headers = {
