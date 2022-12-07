@@ -11,7 +11,7 @@ def main():
     emby_domain_name = 'https://x' #NO TRAILING /
     emby_api_key = ''
 
-    kavita_domain_name = 'https://read.solostream.org' #NO TRAILING /
+    kavita_domain_name = 'https://x' #NO TRAILING /
     kavita_api_key = 'xxxxxx-xxxx-xxxx-xxxx-xxxxxxxx' #INCLUDE DASHES
     roles = ['Download', 'Bookmark', 'Change Restriction']
     libraries = [1, 2, 3] 
