@@ -155,8 +155,10 @@ def invite(domain_name, email, jwt, roles, libraries):
 
     if response.status_code == 200:
         print("Success | Invite | Send Successful", response.status_code)
+    elif response.status_code == 400:
+        print("Warning | Invite | Send failure with error ", response.status_code, "Check for pending invites.")
     else:
-        print("Error | Invite | Send Failure with error ", response.status_code)
+        print("Error | Invite | Send failure with error ", response.status_code)
 
 
 #
